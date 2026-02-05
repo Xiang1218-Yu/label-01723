@@ -1,0 +1,22 @@
+services:
+  # Tetris Online Frontend
+  tetris-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tetris-online
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - tetris-network
+
+networks:
+  tetris-network:
+    driver: bridge

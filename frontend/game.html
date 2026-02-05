@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Play Tetris online - Free classic puzzle game optimized for mobile devices.">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>Play Tetris - Tetris Online</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/game.css">
+</head>
+<body class="game-page">
+  <!-- Header -->
+  <header class="game-header">
+    <a href="index.html" class="back-btn">← Home</a>
+    <div class="game-title">🎮 TETRIS</div>
+  </header>
+
+  <!-- Game Layout -->
+  <main class="game-main">
+    <!-- Left Panel: Score & Info (大屏显示) -->
+    <aside class="left-panel">
+      <div class="info-box score-box">
+        <div class="info-label">SCORE</div>
+        <div class="info-value" id="score-value">0</div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">LEVEL</div>
+        <div class="info-value" id="level-value">1</div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">LINES</div>
+        <div class="info-value" id="lines-value">0</div>
+      </div>
+    </aside>
+
+    <!-- Center: Game Board -->
+    <div class="center-panel">
+      <div class="game-wrapper">
+        <div class="game-canvas-box">
+          <canvas id="game-canvas"></canvas>
+        </div>
+        <!-- Mobile: Side info -->
+        <div class="mobile-side">
+          <div class="mobile-score">
+            <span class="ms-label">SCORE</span>
+            <span class="ms-value" id="mobile-score">0</span>
+          </div>
+          <div class="next-box">
+            <div class="next-label">NEXT</div>
+            <canvas id="next-canvas"></canvas>
+          </div>
+          <div class="mobile-info">
+            <div><span>LV</span><span id="mobile-level">1</span></div>
+            <div><span>LINE</span><span id="mobile-lines">0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Next & Controls (大屏显示) -->
+    <aside class="right-panel">
+      <div class="next-box desktop-next">
+        <div class="next-label">NEXT</div>
+        <canvas id="next-canvas-desktop"></canvas>
+      </div>
+      <div class="controls-box">
+        <div class="ctrl-row">
+          <button class="ctrl-btn rotate-btn" id="btn-rotate">↻</button>
+        </div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn" id="btn-left">◀</button>
+          <button class="ctrl-btn" id="btn-down">▼</button>
+          <button class="ctrl-btn" id="btn-right">▶</button>
+        </div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn drop-btn" id="btn-drop">⏬</button>
+        </div>
+      </div>
+      <button class="start-btn" id="start-btn">START</button>
+      <button class="pause-btn" id="pause-btn" style="display:none;">PAUSE</button>
+    </aside>
+  </main>
+
+  <!-- Mobile Controls (底部) -->
+  <footer class="mobile-controls">
+    <div class="mobile-ctrl-row">
+      <button class="m-btn rotate" id="m-rotate">↻</button>
+      <button class="m-btn" id="m-left">◀</button>
+      <button class="m-btn" id="m-down">▼</button>
+      <button class="m-btn" id="m-right">▶</button>
+      <button class="m-btn drop" id="m-drop">⏬</button>
+    </div>
+    <button class="m-start-btn" id="m-start-btn">START GAME</button>
+  </footer>
+
+  <!-- Game Over -->
+  <div class="game-overlay" id="game-overlay">
+    <div class="overlay-box">
+      <div class="overlay-title">GAME OVER</div>
+      <div class="overlay-score">
+        <span>SCORE</span>
+        <span id="final-score">0</span>
+      </div>
+      <button class="overlay-btn" id="restart-btn">PLAY AGAIN</button>
+      <button class="overlay-btn secondary" id="home-btn">HOME</button>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/tetris.js"></script>
+  <script>
+    // Sync mobile score displays
+    const origUpdate = window.tetrisGame?.updateDisplay;
+    if (window.tetrisGame) {
+      window.tetrisGame.updateDisplay = function() {
+        origUpdate?.call(this);
+        document.getElementById('mobile-score').textContent = this.score;
+        document.getElementById('mobile-level').textContent = this.level;
+        document.getElementById('mobile-lines').textContent = this.lines;
+      };
+    }
+    // Mobile button bindings
+    ['m-rotate','m-left','m-down','m-right','m-drop'].forEach(id => {
+      const btn = document.getElementById(id);
+      const action = id.replace('m-','btn-');
+      btn?.addEventListener('touchstart', e => {
+        e.preventDefault();
+        document.getElementById(action)?.click();
+      });
+      btn?.addEventListener('click', () => document.getElementById(action)?.click());
+    });
+    document.getElementById('m-start-btn')?.addEventListener('click', () => {
+      document.getElementById('start-btn')?.click();
+    });
+  </script>
+</body>
+</html>
