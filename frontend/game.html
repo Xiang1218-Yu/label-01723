@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Play Tetris online - Free classic puzzle game optimized for mobile devices.">
+  <meta name="description" content="Play Tetris online - Free classic puzzle game.">
   <meta name="theme-color" content="#1a1a2e">
   <title>Play Tetris - Tetris Online</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
@@ -17,10 +17,10 @@
     <div class="game-title">🎮 TETRIS</div>
   </header>
 
-  <!-- Game Layout -->
-  <main class="game-main">
-    <!-- Left Panel: Score & Info (大屏显示) -->
-    <aside class="left-panel">
+  <!-- Game Container -->
+  <main class="game-container">
+    <!-- Left Panel (Desktop) -->
+    <aside class="side-panel left-panel">
       <div class="info-box score-box">
         <div class="info-label">SCORE</div>
         <div class="info-value" id="score-value">0</div>
@@ -36,66 +36,48 @@
     </aside>
 
     <!-- Center: Game Board -->
-    <div class="center-panel">
-      <div class="game-wrapper">
-        <div class="game-canvas-box">
-          <canvas id="game-canvas"></canvas>
-        </div>
-        <!-- Mobile: Side info -->
-        <div class="mobile-side">
-          <div class="mobile-score">
-            <span class="ms-label">SCORE</span>
-            <span class="ms-value" id="mobile-score">0</span>
-          </div>
-          <div class="next-box">
-            <div class="next-label">NEXT</div>
-            <canvas id="next-canvas"></canvas>
-          </div>
-          <div class="mobile-info">
-            <div><span>LV</span><span id="mobile-level">1</span></div>
-            <div><span>LINE</span><span id="mobile-lines">0</span></div>
-          </div>
-        </div>
-      </div>
+    <div class="game-board">
+      <canvas id="game-canvas"></canvas>
     </div>
 
-    <!-- Right Panel: Next & Controls (大屏显示) -->
-    <aside class="right-panel">
-      <div class="next-box desktop-next">
+    <!-- Right Panel (Desktop) -->
+    <aside class="side-panel right-panel">
+      <div class="next-box">
         <div class="next-label">NEXT</div>
-        <canvas id="next-canvas-desktop"></canvas>
+        <canvas id="next-canvas"></canvas>
       </div>
       <div class="controls-box">
-        <div class="ctrl-row">
-          <button class="ctrl-btn rotate-btn" id="btn-rotate">↻</button>
-        </div>
+        <button class="ctrl-btn" id="btn-rotate">↻</button>
         <div class="ctrl-row">
           <button class="ctrl-btn" id="btn-left">◀</button>
           <button class="ctrl-btn" id="btn-down">▼</button>
           <button class="ctrl-btn" id="btn-right">▶</button>
         </div>
-        <div class="ctrl-row">
-          <button class="ctrl-btn drop-btn" id="btn-drop">⏬</button>
-        </div>
+        <button class="ctrl-btn" id="btn-drop">⏬</button>
       </div>
-      <button class="start-btn" id="start-btn">START</button>
-      <button class="pause-btn" id="pause-btn" style="display:none;">PAUSE</button>
+      <button class="action-btn start-btn" id="start-btn">START</button>
+      <button class="action-btn pause-btn" id="pause-btn">PAUSE</button>
     </aside>
   </main>
 
-  <!-- Mobile Controls (底部) -->
+  <!-- Mobile Controls -->
   <footer class="mobile-controls">
-    <div class="mobile-ctrl-row">
-      <button class="m-btn rotate" id="m-rotate">↻</button>
+    <div class="mobile-info-row">
+      <div class="m-info"><span>SCORE</span><span id="m-score">0</span></div>
+      <div class="m-info"><span>LV</span><span id="m-level">1</span></div>
+      <div class="m-info"><span>NEXT</span><canvas id="m-next-canvas"></canvas></div>
+    </div>
+    <div class="mobile-btn-row">
+      <button class="m-btn" id="m-rotate">↻</button>
       <button class="m-btn" id="m-left">◀</button>
       <button class="m-btn" id="m-down">▼</button>
       <button class="m-btn" id="m-right">▶</button>
-      <button class="m-btn drop" id="m-drop">⏬</button>
+      <button class="m-btn" id="m-drop">⏬</button>
     </div>
     <button class="m-start-btn" id="m-start-btn">START GAME</button>
   </footer>
 
-  <!-- Game Over -->
+  <!-- Game Over Overlay -->
   <div class="game-overlay" id="game-overlay">
     <div class="overlay-box">
       <div class="overlay-title">GAME OVER</div>
@@ -108,32 +90,6 @@
     </div>
   </div>
 
-  <script src="js/main.js"></script>
   <script src="js/tetris.js"></script>
-  <script>
-    // Sync mobile score displays
-    const origUpdate = window.tetrisGame?.updateDisplay;
-    if (window.tetrisGame) {
-      window.tetrisGame.updateDisplay = function() {
-        origUpdate?.call(this);
-        document.getElementById('mobile-score').textContent = this.score;
-        document.getElementById('mobile-level').textContent = this.level;
-        document.getElementById('mobile-lines').textContent = this.lines;
-      };
-    }
-    // Mobile button bindings
-    ['m-rotate','m-left','m-down','m-right','m-drop'].forEach(id => {
-      const btn = document.getElementById(id);
-      const action = id.replace('m-','btn-');
-      btn?.addEventListener('touchstart', e => {
-        e.preventDefault();
-        document.getElementById(action)?.click();
-      });
-      btn?.addEventListener('click', () => document.getElementById(action)?.click());
-    });
-    document.getElementById('m-start-btn')?.addEventListener('click', () => {
-      document.getElementById('start-btn')?.click();
-    });
-  </script>
 </body>
 </html>
