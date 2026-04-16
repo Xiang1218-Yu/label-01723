@@ -145,6 +145,7 @@ class TetrisGame {
       this.BLOCK_SIZE = newBlockSize;
       this.canvas.width = this.COLS * newBlockSize;
       this.canvas.height = this.ROWS * newBlockSize;
+      this.bindEvents();
       this.draw();
     }
   }
