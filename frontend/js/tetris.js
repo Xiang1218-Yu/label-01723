@@ -145,6 +145,7 @@ class TetrisGame {
       this.BLOCK_SIZE = newBlockSize;
       this.canvas.width = this.COLS * newBlockSize;
       this.canvas.height = this.ROWS * newBlockSize;
+      this.bindEvents();
       this.draw();
     }
   }
@@ -336,7 +337,7 @@ class TetrisGame {
       const points = [0, 100, 300, 500, 800];
       this.score += points[cleared] * this.level;
       this.lines += cleared;
-      const newLevel = Math.floor(this.lines / 10) + 1;
+      const newLevel = Math.floor((this.lines - cleared) / 10) + 1;
       if (newLevel > this.level) {
         this.level = newLevel;
         this.dropInterval = Math.max(100, 1000 - (this.level - 1) * 100);
